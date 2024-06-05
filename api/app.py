@@ -1,5 +1,5 @@
 # Path to save the new Flask application Python script
-flask_app_path = os.path.join(inner_extract_dir, 'api', 'app.py')
+# flask_app_path = os.path.join(inner_extract_dir, 'api', 'app.py')
 
 # Content of the Flask app
 from flask import Flask, request, jsonify, make_response

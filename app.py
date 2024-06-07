@@ -8,6 +8,8 @@ app = Flask(__name__)
 users_db = {}
 countries_db = {}
 cities_db = {}
+amenities_db = {}
+places_db = {}
 
 # Validate email format
 def is_email_valid(email):
@@ -134,6 +136,142 @@ def delete_city(city_id):
     if city_id not in cities_db:
         return make_response(jsonify({'error': 'City not found'}), 404)
     del cities_db[city_id]
+    return make_response('', 204)
+
+# POST /amenities: Creates a new amenity
+@app.route('/amenities', methods=['POST'])
+def create_amenity():
+    data = request.get_json()
+    if not data or 'name' not in data:
+        return make_response(jsonify({'error': 'Missing required fields'}), 400)
+    if any(amenity['name'] == data['name'] for amenity in amenities_db.values()):
+        return make_response(jsonify({'error': 'Name of amenity already exists'}), 409)
+    amenity_id = str(uuid.uuid4())
+    data['id'] = amenity_id
+    data['created_at'] = data['updated_at'] = datetime.now().isoformat()
+    amenities_db[amenity_id] = data
+    return make_response(jsonify(data), 201)
+
+# GET /amenities: Retrieves a list of all amenities
+@app.route('/amenities', methods=['GET'])
+def get_amenities():
+    return jsonify(list(amenities_db.values()))
+
+# GET /amenities/<amenity_id>: Retrives details of any specific amenity
+@app.route('/amenities/<amenity_id>', methods=['GET'])
+def get_amenity(amenity_id):
+    if amenity_id not in amenities_db:
+        return make_response(jsonify({'error': 'Amenity not found'}), 404)
+    return jsonify(amenities_db[amenity_id])
+
+# PUT /amenities/<amenity_id>: Updates an existing amenity
+@app.route('/amenities/<amenity_id>', methods=['PUT'])
+def update_amenity(amenity_id):
+    if amenity_id not in amenities_db:
+        return make_response(jsonify({'error': 'Amenity not found'}), 404)
+    data = request.get_json()
+    if not data:
+        return make_response(jsonify({'error': 'No data provided'}), 400)
+    amenities_db[amenity_id].update(data)
+    amenities_db[amenity_id]['updated_at'] = datetime.now().isoformat()
+    return jsonify(amenities_db[amenity_id])
+
+# DELETE /amenities/<amenity_id>: Deletes a specific amenity
+@app.route('/amenities/<amenity_id>', methods=['DELETE'])
+def delete_amenity(amenity_id):
+    if amenity_id not in amenities_db:
+        return make_response(jsonify({'error': 'Amenity not found'}), 404)
+    del amenities_db[amenity_id]
+    return make_response('', 204)
+
+# Validate country code
+def is_valid_country_code(country_code):
+    return country_code in countries_db
+
+# validate geographical coords
+def is_valid_coordinates(lat, lon):
+    return -90 <= lat <= 90 and -180 <= lon <= 180
+
+# validate places
+def validate_place_data(data):
+    required_fields = ['name', 'description', 'address', 'city_id', 'latitude', 'longitude', 'host_id', 'number_of_rooms', 'number_of_bathrooms', 'price_per_night', 'max_guests']
+    
+    # Check for missing required fields only if it's a creation request
+    if 'id' not in data:  # Assuming 'id' is added only during creation
+        for field in required_fields:
+            if field not in data:
+                return False, f'Missing required field: {field}'
+    
+    # Validate specific fields if they exist in the data
+    if 'number_of_rooms' in data and (not isinstance(data['number_of_rooms'], int) or data['number_of_rooms'] < 0):
+        return False, 'Invalid number of rooms'
+    if 'number_of_bathrooms' in data and (not isinstance(data['number_of_bathrooms'], int) or data['number_of_bathrooms'] < 0):
+        return False, 'Invalid number of bathrooms'
+    if 'max_guests' in data and (not isinstance(data['max_guests'], int) or data['max_guests'] < 0):
+        return False, 'Invalid guest capacity'
+    if 'price_per_night' in data and (not isinstance(data['price_per_night'], (int, float)) or data['price_per_night'] < 0):
+        return False, 'Invalid price per night'
+    if 'latitude' in data and 'longitude' in data and not is_valid_coordinates(data['latitude'], data['longitude']):
+        return False, 'Invalid geographical coordinates'
+    if 'city_id' in data and data['city_id'] not in cities_db:
+        return False, 'Invalid city_id'
+    if 'amenity_ids' in data:
+        for amenity_id in data['amenity_ids']:
+            if amenity_id not in amenities_db:
+                return False, f'Invalid amenity_id: {amenity_id}'
+    
+    return True, None
+
+# POST /places: Creates a new place
+@app.route('/places', methods=['POST'])
+def create_place():
+    data = request.get_json()
+    is_valid, error = validate_place_data(data)
+    if not is_valid:
+        return make_response(jsonify({'error': 'Invalid input'}), 400)
+    place_id = str(uuid.uuid4())
+    data['id'] = place_id
+    data['created_at'] = data['updated_at'] = datetime.now().isoformat()
+    places_db[place_id] = data
+    return make_response(jsonify(data), 201)
+
+# GET /places: retrieves a list of all places
+@app.route('/places', methods=['GET'])
+def get_places():
+    return jsonify(list(places_db.values()))
+
+# GET /places/<place_id>: retrives information of a specific place
+@app.route('/places/<place_id>', methods=['GET'])
+def get_place(place_id):
+    if place_id not in places_db:
+        return make_response(jsonify({'error': 'Place not found'}), 404)
+    return jsonify(places_db[place_id])
+
+# PUT /places/<place_id>: Updates an existing place's information
+@app.route('/places/<place_id>', methods=['PUT'])
+def update_place(place_id):
+    if place_id not in places_db:
+        return make_response(jsonify({'error': 'Place not found'}), 404)
+    data = request.get_json()
+    if not data:
+        return make_response(jsonify({'error': 'No data provided'}), 400)
+    current_data = places_db[place_id].copy()
+    for key, value in data.items():
+        places_db[place_id][key] = value
+    is_valid, error = validate_place_data(places_db[place_id])
+    if not is_valid:
+        places_db[place_id] = current_data
+        return make_response(jsonify({'error' : 'Invalid input'}), 400)
+
+    places_db[place_id]['updated_at'] = datetime.now().isoformat()
+    return jsonify(places_db[place_id]), 200
+
+# DELETE /places/<place_id>: Deletes a specific place
+@app.route('/places/<place_id>', methods=['DELETE'])
+def delete_place(place_id):
+    if place_id not in places_db:
+        return make_response(jsonify({'error': 'Place not found'}), 404)
+    del places_db[place_id]
     return make_response('', 204)
 
 if __name__ == '__main__':

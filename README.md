@@ -17,29 +17,29 @@ To set up and run the HBnB API on your local machine, follow these steps:
 
 1. Clone this repository to your local machine:
 
-    \`\`\`bash
+    ```bash
     git clone https://github.com/your-username/hbnb-api.git
-    \`\`\`
+    ```
 
 2. Navigate to the project directory and set up a virtual environment:
 
-    \`\`\`bash
+    ```bash
     cd hbnb-api
     python3 -m venv env
     source env/bin/activate
-    \`\`\`
+    ```
 
 3. Install the required dependencies:
 
-    \`\`\`bash
+    ```bash
     pip install -r requirements.txt
-    \`\`\`
+    ```
 
 4. Run the Flask application:
 
-    \`\`\`bash
+    ```bash
     flask run
-    \`\`\`
+    ```
 
 ## Usage
 
@@ -47,144 +47,144 @@ To set up and run the HBnB API on your local machine, follow these steps:
 
 - **Create a User**
 
-    \`\`\`bash
+    ```bash
     curl -X POST http://127.0.0.1:5000/users -H "Content-Type: application/json" -d '{
         "email": "user@example.com",
         "first_name": "John",
         "last_name": "Doe"
     }'
-    \`\`\`
+    ```
 
 - **Retrieve All Users**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/users
-    \`\`\`
+    ```
 
 - **Retrieve a Specific User**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/users/{user_id}
-    \`\`\`
+    ```
 
 - **Update a User**
 
-    \`\`\`bash
+    ```bash
     curl -X PUT http://127.0.0.1:5000/users/{user_id} -H "Content-Type: application/json" -d '{
         "email": "new-email@example.com",
         "first_name": "John",
         "last_name": "Doe"
     }'
-    \`\`\`
+    ```
 
 - **Delete a User**
 
-    \`\`\`bash
+    ```bash
     curl -X DELETE http://127.0.0.1:5000/users/{user_id}
-    \`\`\`
+    ```
 
 ### Countries
 
 - **Create a Country**
 
-    \`\`\`bash
+    ```bash
     curl -X POST http://127.0.0.1:5000/countries -H "Content-Type: application/json" -d '{
         "name": "United States",
         "code": "US"
     }'
-    \`\`\`
+    ```
 
 - **Retrieve All Countries**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/countries
-    \`\`\`
+    ```
 
 - **Retrieve a Specific Country**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/countries/{country_code}
-    \`\`\`
+    ```
 
 ### Cities
 
 - **Create a City**
 
-    \`\`\`bash
+    ```bash
     curl -X POST http://127.0.0.1:5000/cities -H "Content-Type: application/json" -d '{
         "name": "New York",
         "country_code": "US"
     }'
-    \`\`\`
+    ```
 
 - **Retrieve All Cities**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/cities
-    \`\`\`
+    ```
 
 - **Retrieve a Specific City**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/cities/{city_id}
-    \`\`\`
+    ```
 
 - **Update a City**
 
-    \`\`\`bash
+    ```bash
     curl -X PUT http://127.0.0.1:5000/cities/{city_id} -H "Content-Type: application/json" -d '{
         "name": "New York",
         "country_code": "US"
     }'
-    \`\`\`
+    ```
 
 - **Delete a City**
 
-    \`\`\`bash
+    ```bash
     curl -X DELETE http://127.0.0.1:5000/cities/{city_id}
-    \`\`\`
+    ```
 
 ### Amenities
 
 - **Create an Amenity**
 
-    \`\`\`bash
+    ```bash
     curl -X POST http://127.0.0.1:5000/amenities -H "Content-Type: application/json" -d '{
         "name": "Wi-Fi"
     }'
-    \`\`\`
+    ```
 
 - **Retrieve All Amenities**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/amenities
-    \`\`\`
+    ```
 
 - **Retrieve a Specific Amenity**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/amenities/{amenity_id}
-    \`\`\`
+    ```
 
 - **Update an Amenity**
 
-    \`\`\`bash
+    ```bash
     curl -X PUT http://127.0.0.1:5000/amenities/{amenity_id} -H "Content-Type: application/json" -d '{
         "name": "High-Speed Wi-Fi"
     }'
-    \`\`\`
+    ```
 
 - **Delete an Amenity**
 
-    \`\`\`bash
+    ```bash
     curl -X DELETE http://127.0.0.1:5000/amenities/{amenity_id}
-    \`\`\`
+    ```
 
 ### Places
 
 - **Create a Place**
 
-    \`\`\`bash
+    ```bash
     curl -X POST http://127.0.0.1:5000/places -H "Content-Type: application/json" -d '{
         "name": "Central Park",
         "description": "A large public park in New York City.",
@@ -199,23 +199,23 @@ To set up and run the HBnB API on your local machine, follow these steps:
         "max_guests": 100,
         "amenity_ids": ["<amenity-id>"]
     }'
-    \`\`\`
+    ```
 
 - **Retrieve All Places**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/places
-    \`\`\`
+    ```
 
 - **Retrieve a Specific Place**
 
-    \`\`\`bash
+    ```bash
     curl -X GET http://127.0.0.1:5000/places/{place_id}
-    \`\`\`
+    ```
 
 - **Update a Place**
 
-    \`\`\`bash
+    ```bash
     curl -X PUT http://127.0.0.1:5000/places/{place_id} -H "Content-Type: application/json" -d '{
         "name": "Updated Park",
         "description": "An updated description.",
@@ -230,13 +230,13 @@ To set up and run the HBnB API on your local machine, follow these steps:
         "max_guests": 100,
         "amenity_ids": ["<amenity-id>"]
     }'
-    \`\`\`
+    ```
 
 - **Delete a Place**
 
-    \`\`\`bash
+    ```bash
     curl -X DELETE http://127.0.0.1:5000/places/{place_id}
-    \`\`\`
+    ```
 
 ## Running the Server
 

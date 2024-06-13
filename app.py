@@ -308,5 +308,77 @@ def delete_place(place_id):
     save_json('places.json', places_db)
     return make_response('', 204)
 
+#task 7 review management
+
+@app.route('/places/<place_id>/reviews', methods=['POST'])
+def create_review(place_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    rating = data.get('rating')
+    comment = data.get('comment')
+    
+    if place_id not in places_db or user_id not in users_db:
+        return make_response(jsonify({'error': 'Place or user not found'}), 404)
+    if places_db[place_id]['host_id'] == user_id:
+        return make_response(jsonify({'error': 'Hosts cannot review their own place'}), 400)
+    if not (1 <= rating <= 5):
+        return make_response(jsonify({'error': 'Rating must be between 1 and 5'}), 400)
+    
+    review_id = str(uuid.uuid4())
+    new_review = {
+        'id': review_id,
+        'place_id': place_id,
+        'user_id': user_id,
+        'rating': rating,
+        'comment': comment,
+        'created_at': datetime.now().isoformat(),
+        'updated_at': datetime.now().isoformat()
+    }
+    reviews_db[review_id] = new_review
+    return make_response(jsonify(new_review), 201)
+
+@app.route('/users/<user_id>/reviews', methods=['GET'])
+def get_reviews_by_user(user_id):
+    user_reviews = [review for review in reviews_db.values() if review['user_id'] == user_id]
+    if not user_reviews:
+        return make_response(jsonify({'error': 'No reviews found for this user'}), 404)
+    return jsonify(user_reviews)
+
+@app.route('/places/<place_id>/reviews', methods=['GET'])
+def get_reviews_by_place(place_id):
+    place_reviews = [review for review in reviews_db.values() if review['place_id'] == place_id]
+    if not place_reviews:
+        return make_response(jsonify({'error': 'No reviews found for this place'}), 404)
+    return jsonify(place_reviews)
+
+@app.route('/reviews/<review_id>', methods=['GET'])
+def get_review(review_id):
+    review = reviews_db.get(review_id)
+    if not review:
+        return make_response(jsonify({'error': 'Review not found'}), 404)
+    return jsonify(review)
+
+@app.route('/reviews/<review_id>', methods=['PUT'])
+def update_review(review_id):
+    review = reviews_db.get(review_id)
+    if not review:
+        return make_response(jsonify({'error': 'Review not found'}), 404)
+    data = request.get_json()
+    review.update({
+        'rating': data.get('rating', review['rating']),
+        'comment': data.get('comment', review['comment']),
+        'updated_at': datetime.now().isoformat()
+    })
+    return jsonify(review)
+
+@app.route('/reviews/<review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    if review_id in reviews_db:
+        del reviews_db[review_id]
+        return make_response('', 204)
+    else:
+        return make_response(jsonify({'error': 'Review not found'}), 404)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

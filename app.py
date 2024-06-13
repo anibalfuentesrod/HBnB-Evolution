@@ -9,8 +9,11 @@ app = Flask(__name__)
 data_dir = 'data'
 
 def load_json(file_name):
-    with open(os.path.join(data_dir, file_name), 'r') as f:
-        return json.load(f)
+    try:
+        with open(os.path.join(data_dir, file_name), 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
 
 def save_json(file_name, data):
     with open(os.path.join(data_dir, file_name), 'w') as f:
@@ -22,6 +25,7 @@ countries_db = load_json('countries.json')
 cities_db = load_json('cities.json')
 amenities_db = load_json('amenities.json')
 places_db = load_json('places.json')
+reviews_db = load_json('reviews.json')
 
 # Validate email format
 def is_email_valid(email):
@@ -186,7 +190,7 @@ def create_amenity():
 def get_amenities():
     return jsonify(amenities_db)
 
-# GET /amenities/<amenity_id>: Retrives details of any specific amenity
+# GET /amenities/<amenity_id>: Retrieves details of any specific amenity
 @app.route('/amenities/<amenity_id>', methods=['GET'])
 def get_amenity(amenity_id):
     amenity = next((amenity for amenity in amenities_db if amenity['id'] == amenity_id), None)
@@ -317,11 +321,11 @@ def create_review(place_id):
     rating = data.get('rating')
     comment = data.get('comment')
     
-    if place_id not in places_db or user_id not in users_db:
+    if place_id not in [place['id'] for place in places_db] or user_id not in [user['id'] for user in users_db]:
         return make_response(jsonify({'error': 'Place or user not found'}), 404)
-    if places_db[place_id]['host_id'] == user_id:
-        return make_response(jsonify({'error': 'Hosts cannot review their own place'}), 400)
-    if not (1 <= rating <= 5):
+    if any(review['place_id'] == place_id and review['user_id'] == user_id for review in reviews_db):
+        return make_response(jsonify({'error': 'User has already reviewed this place'}), 409)
+    if rating < 1 or rating > 5:
         return make_response(jsonify({'error': 'Rating must be between 1 and 5'}), 400)
     
     review_id = str(uuid.uuid4())
@@ -334,34 +338,35 @@ def create_review(place_id):
         'created_at': datetime.now().isoformat(),
         'updated_at': datetime.now().isoformat()
     }
-    reviews_db[review_id] = new_review
+    reviews_db.append(new_review)
+    save_json('reviews.json', reviews_db)
     return make_response(jsonify(new_review), 201)
 
 @app.route('/users/<user_id>/reviews', methods=['GET'])
 def get_reviews_by_user(user_id):
-    user_reviews = [review for review in reviews_db.values() if review['user_id'] == user_id]
+    user_reviews = [review for review in reviews_db if review['user_id'] == user_id]
     if not user_reviews:
         return make_response(jsonify({'error': 'No reviews found for this user'}), 404)
     return jsonify(user_reviews)
 
 @app.route('/places/<place_id>/reviews', methods=['GET'])
 def get_reviews_by_place(place_id):
-    place_reviews = [review for review in reviews_db.values() if review['place_id'] == place_id]
+    place_reviews = [review for review in reviews_db if review['place_id'] == place_id]
     if not place_reviews:
         return make_response(jsonify({'error': 'No reviews found for this place'}), 404)
     return jsonify(place_reviews)
 
 @app.route('/reviews/<review_id>', methods=['GET'])
 def get_review(review_id):
-    review = reviews_db.get(review_id)
-    if not review:
+    review = next((review for review in reviews_db if review['id'] == review_id), None)
+    if review is None:
         return make_response(jsonify({'error': 'Review not found'}), 404)
     return jsonify(review)
 
 @app.route('/reviews/<review_id>', methods=['PUT'])
 def update_review(review_id):
-    review = reviews_db.get(review_id)
-    if not review:
+    review = next((review for review in reviews_db if review['id'] == review_id), None)
+    if review is None:
         return make_response(jsonify({'error': 'Review not found'}), 404)
     data = request.get_json()
     review.update({
@@ -369,15 +374,18 @@ def update_review(review_id):
         'comment': data.get('comment', review['comment']),
         'updated_at': datetime.now().isoformat()
     })
+    save_json('reviews.json', reviews_db)
     return jsonify(review)
 
 @app.route('/reviews/<review_id>', methods=['DELETE'])
 def delete_review(review_id):
-    if review_id in reviews_db:
-        del reviews_db[review_id]
-        return make_response('', 204)
-    else:
+    global reviews_db
+    review = next((review for review in reviews_db if review['id'] == review_id), None)
+    if review is None:
         return make_response(jsonify({'error': 'Review not found'}), 404)
+    reviews_db = [review for review in reviews_db if review['id'] != review_id]
+    save_json('reviews.json', reviews_db)
+    return make_response('', 204)
 
 
 if __name__ == '__main__':

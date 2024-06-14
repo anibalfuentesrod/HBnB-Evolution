@@ -1,4 +1,3 @@
-
 # HBnB API
 
 This repository contains a RESTful API for managing various entities like users, countries, cities, amenities, and places. The API is built using Flask and stores data in JSON files for persistence.
@@ -12,6 +11,8 @@ This repository contains a RESTful API for managing various entities like users,
 - Manage places, including linking them to cities, hosts, and amenities with full CRUD operations.
 
 ## Getting Started
+
+### Setting Up Locally
 
 To set up and run the HBnB API on your local machine, follow these steps:
 
@@ -41,6 +42,32 @@ To set up and run the HBnB API on your local machine, follow these steps:
     flask run
     ```
 
+### Setting Up with Docker
+
+To containerize and run the HBnB API using Docker, follow these steps:
+
+1. Ensure Docker is installed on your machine. If not, download and install Docker from [here](https://docs.docker.com/get-docker/).
+
+2. Build the Docker image:
+
+    ```bash
+    docker build -t my-flask-app .
+    ```
+
+3. Run the Docker container:
+
+    ```bash
+    docker run -d -p 5000:5000 -v $(pwd)/data:/app/data my-flask-app
+    ```
+
+4. Verify the container is running:
+
+    ```bash
+    docker ps
+    ```
+
+5. Access the API at [http://localhost:5000](http://localhost:5000).
+
 ## Usage
 
 ### Users
@@ -52,19 +79,19 @@ To set up and run the HBnB API on your local machine, follow these steps:
         "email": "user@example.com",
         "first_name": "John",
         "last_name": "Doe"
-    }'
+    }' | jq
     ```
 
 - **Retrieve All Users**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/users
+    curl -X GET http://127.0.0.1:5000/users | jq
     ```
 
 - **Retrieve a Specific User**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/users/{user_id}
+    curl -X GET http://127.0.0.1:5000/users/{user_id} | jq
     ```
 
 - **Update a User**
@@ -74,13 +101,13 @@ To set up and run the HBnB API on your local machine, follow these steps:
         "email": "new-email@example.com",
         "first_name": "John",
         "last_name": "Doe"
-    }'
+    }' | jq
     ```
 
 - **Delete a User**
 
     ```bash
-    curl -X DELETE http://127.0.0.1:5000/users/{user_id}
+    curl -X DELETE http://127.0.0.1:5000/users/{user_id} | jq
     ```
 
 ### Countries
@@ -91,19 +118,19 @@ To set up and run the HBnB API on your local machine, follow these steps:
     curl -X POST http://127.0.0.1:5000/countries -H "Content-Type: application/json" -d '{
         "name": "United States",
         "code": "US"
-    }'
+    }' | jq
     ```
 
 - **Retrieve All Countries**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/countries
+    curl -X GET http://127.0.0.1:5000/countries | jq
     ```
 
 - **Retrieve a Specific Country**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/countries/{country_code}
+    curl -X GET http://127.0.0.1:5000/countries/{country_code} | jq
     ```
 
 ### Cities
@@ -114,19 +141,19 @@ To set up and run the HBnB API on your local machine, follow these steps:
     curl -X POST http://127.0.0.1:5000/cities -H "Content-Type: application/json" -d '{
         "name": "New York",
         "country_code": "US"
-    }'
+    }' | jq
     ```
 
 - **Retrieve All Cities**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/cities
+    curl -X GET http://127.0.0.1:5000/cities | jq
     ```
 
 - **Retrieve a Specific City**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/cities/{city_id}
+    curl -X GET http://127.0.0.1:5000/cities/{city_id} | jq
     ```
 
 - **Update a City**
@@ -135,13 +162,13 @@ To set up and run the HBnB API on your local machine, follow these steps:
     curl -X PUT http://127.0.0.1:5000/cities/{city_id} -H "Content-Type: application/json" -d '{
         "name": "New York",
         "country_code": "US"
-    }'
+    }' | jq
     ```
 
 - **Delete a City**
 
     ```bash
-    curl -X DELETE http://127.0.0.1:5000/cities/{city_id}
+    curl -X DELETE http://127.0.0.1:5000/cities/{city_id} | jq
     ```
 
 ### Amenities
@@ -151,19 +178,19 @@ To set up and run the HBnB API on your local machine, follow these steps:
     ```bash
     curl -X POST http://127.0.0.1:5000/amenities -H "Content-Type: application/json" -d '{
         "name": "Wi-Fi"
-    }'
+    }' | jq
     ```
 
 - **Retrieve All Amenities**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/amenities
+    curl -X GET http://127.0.0.1:5000/amenities | jq
     ```
 
 - **Retrieve a Specific Amenity**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/amenities/{amenity_id}
+    curl -X GET http://127.0.0.1:5000/amenities/{amenity_id} | jq
     ```
 
 - **Update an Amenity**
@@ -171,13 +198,13 @@ To set up and run the HBnB API on your local machine, follow these steps:
     ```bash
     curl -X PUT http://127.0.0.1:5000/amenities/{amenity_id} -H "Content-Type: application/json" -d '{
         "name": "High-Speed Wi-Fi"
-    }'
+    }' | jq
     ```
 
 - **Delete an Amenity**
 
     ```bash
-    curl -X DELETE http://127.0.0.1:5000/amenities/{amenity_id}
+    curl -X DELETE http://127.0.0.1:5000/amenities/{amenity_id} | jq
     ```
 
 ### Places
@@ -198,19 +225,19 @@ To set up and run the HBnB API on your local machine, follow these steps:
         "price_per_night": 0,
         "max_guests": 100,
         "amenity_ids": ["<amenity-id>"]
-    }'
+    }' | jq
     ```
 
 - **Retrieve All Places**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/places
+    curl -X GET http://127.0.0.1:5000/places | jq
     ```
 
 - **Retrieve a Specific Place**
 
     ```bash
-    curl -X GET http://127.0.0.1:5000/places/{place_id}
+    curl -X GET http://127.0.0.1:5000/places/{place_id} | jq
     ```
 
 - **Update a Place**
@@ -229,13 +256,13 @@ To set up and run the HBnB API on your local machine, follow these steps:
         "price_per_night": 0,
         "max_guests": 100,
         "amenity_ids": ["<amenity-id>"]
-    }'
+    }' | jq
     ```
 
 - **Delete a Place**
 
     ```bash
-    curl -X DELETE http://127.0.0.1:5000/places/{place_id}
+    curl -X DELETE http://127.0.0.1:5000/places/{place_id} | jq
     ```
 
 ## Running the Server

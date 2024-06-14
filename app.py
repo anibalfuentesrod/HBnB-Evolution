@@ -9,9 +9,11 @@ app = Flask(__name__)
 @app.route('/users', methods=['GET', 'POST'], strict_slashes=False)
 def manage_users():
     if request.method == 'GET':
+        # List all users
         return jsonify(data_manager.get_all('users'))
 
     if request.method == 'POST':
+        # Create a new user
         data = request.get_json()
         if not data or 'email' not in data or 'first_name' not in data or 'last_name' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
@@ -27,9 +29,11 @@ def manage_user(user_id):
         return make_response(jsonify({'error': 'User not found'}), 404)
 
     if request.method == 'GET':
+        # Get a user by ID
         return jsonify(user)
 
     if request.method == 'PUT':
+        # Update a user by ID
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -39,6 +43,7 @@ def manage_user(user_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
+        # Delete a user by ID
         data_manager.delete('users', user_id)
         return make_response('', 204)
 
@@ -46,9 +51,11 @@ def manage_user(user_id):
 @app.route('/countries', methods=['GET', 'POST'], strict_slashes=False)
 def manage_countries():
     if request.method == 'GET':
+        # List all countries
         return jsonify(data_manager.get_all('countries'))
 
     if request.method == 'POST':
+        # Create a new country
         data = request.get_json()
         if not data or 'name' not in data or 'code' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
@@ -63,9 +70,11 @@ def manage_country(country_id):
         return make_response(jsonify({'error': 'Country not found'}), 404)
 
     if request.method == 'GET':
+        # Get a country by ID
         return jsonify(country)
 
     if request.method == 'PUT':
+        # Update a country by ID
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -74,6 +83,7 @@ def manage_country(country_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
+        # Delete a country by ID
         data_manager.delete('countries', country_id)
         return make_response('', 204)
 
@@ -81,9 +91,11 @@ def manage_country(country_id):
 @app.route('/cities', methods=['GET', 'POST'], strict_slashes=False)
 def manage_cities():
     if request.method == 'GET':
+        # List all cities
         return jsonify(data_manager.get_all('cities'))
 
     if request.method == 'POST':
+        # Create a new city
         data = request.get_json()
         if not data or 'name' not in data or 'country_code' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
@@ -98,9 +110,11 @@ def manage_city(city_id):
         return make_response(jsonify({'error': 'City not found'}), 404)
 
     if request.method == 'GET':
+        # Get a city by ID
         return jsonify(city)
 
     if request.method == 'PUT':
+        # Update a city by ID
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -109,6 +123,7 @@ def manage_city(city_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
+        # Delete a city by ID
         data_manager.delete('cities', city_id)
         return make_response('', 204)
 
@@ -116,9 +131,11 @@ def manage_city(city_id):
 @app.route('/amenities', methods=['GET', 'POST'], strict_slashes=False)
 def manage_amenities():
     if request.method == 'GET':
+        # List all amenities
         return jsonify(data_manager.get_all('amenities'))
 
     if request.method == 'POST':
+        # Create a new amenity
         data = request.get_json()
         if not data or 'name' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
@@ -133,9 +150,11 @@ def manage_amenity(amenity_id):
         return make_response(jsonify({'error': 'Amenity not found'}), 404)
 
     if request.method == 'GET':
+        # Get an amenity by ID
         return jsonify(amenity)
 
     if request.method == 'PUT':
+        # Update an amenity by ID
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -145,6 +164,7 @@ def manage_amenity(amenity_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
+        # Delete an amenity by ID
         data_manager.delete('amenities', amenity_id)
         return make_response('', 204)
 
@@ -152,9 +172,11 @@ def manage_amenity(amenity_id):
 @app.route('/places', methods=['GET', 'POST'], strict_slashes=False)
 def manage_places():
     if request.method == 'GET':
+        # List all places
         return jsonify(data_manager.get_all('places'))
 
     if request.method == 'POST':
+        # Create a new place
         data = request.get_json()
         if not data or 'name' not in data or 'description' not in data or 'address' not in data or 'city_id' not in data or 'latitude' not in data or 'longitude' not in data or 'host_id' not in data or 'number_of_rooms' not in data or 'number_of_bathrooms' not in data or 'price_per_night' not in data or 'max_guests' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
@@ -170,9 +192,11 @@ def manage_place(place_id):
         return make_response(jsonify({'error': 'Place not found'}), 404)
 
     if request.method == 'GET':
+        # Get a place by ID
         return jsonify(place)
 
     if request.method == 'PUT':
+        # Update a place by ID
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -182,6 +206,7 @@ def manage_place(place_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
+        # Delete a place by ID
         data_manager.delete('places', place_id)
         return make_response('', 204)
 
@@ -189,9 +214,11 @@ def manage_place(place_id):
 @app.route('/reviews', methods=['GET', 'POST'], strict_slashes=False)
 def manage_reviews():
     if request.method == 'GET':
+        # List all reviews
         return jsonify(data_manager.get_all('reviews'))
 
     if request.method == 'POST':
+        # Create a new review
         data = request.get_json()
         if not data or 'place_id' not in data or 'user_id' not in data or 'rating' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
@@ -207,9 +234,11 @@ def manage_review(review_id):
         return make_response(jsonify({'error': 'Review not found'}), 404)
 
     if request.method == 'GET':
+        # Get a review by ID
         return jsonify(review)
 
     if request.method == 'PUT':
+        # Update a review by ID
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -219,6 +248,7 @@ def manage_review(review_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
+        # Delete a review by ID
         data_manager.delete('reviews', review_id)
         return make_response('', 204)
 

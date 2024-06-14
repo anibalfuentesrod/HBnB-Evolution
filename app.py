@@ -8,8 +8,9 @@ app = Flask(__name__)
 # User endpoints
 @app.route('/users', methods=['GET', 'POST'], strict_slashes=False)
 def manage_users():
+    """Endpoint to manage users"""
     if request.method == 'GET':
-        # List all users
+        # Get all users
         return jsonify(data_manager.get_all('users'))
 
     if request.method == 'POST':
@@ -19,21 +20,22 @@ def manage_users():
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
         data['id'] = str(uuid.uuid4())
         data['created_at'] = data['updated_at'] = datetime.now().isoformat()
-        data_manager.save('users', data)
+        data_manager.save('users', data['id'], data)
         return make_response(jsonify(data), 201)
 
 @app.route('/users/<user_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def manage_user(user_id):
+    """Endpoint to manage a specific user"""
     user = data_manager.get('users', user_id)
     if not user:
         return make_response(jsonify({'error': 'User not found'}), 404)
 
     if request.method == 'GET':
-        # Get a user by ID
+        # Get a specific user
         return jsonify(user)
 
     if request.method == 'PUT':
-        # Update a user by ID
+        # Update a user
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -43,15 +45,16 @@ def manage_user(user_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
-        # Delete a user by ID
+        # Delete a user
         data_manager.delete('users', user_id)
         return make_response('', 204)
 
 # Country endpoints
 @app.route('/countries', methods=['GET', 'POST'], strict_slashes=False)
 def manage_countries():
+    """Endpoint to manage countries"""
     if request.method == 'GET':
-        # List all countries
+        # Get all countries
         return jsonify(data_manager.get_all('countries'))
 
     if request.method == 'POST':
@@ -60,21 +63,22 @@ def manage_countries():
         if not data or 'name' not in data or 'code' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
         data['id'] = str(uuid.uuid4())
-        data_manager.save('countries', data)
+        data_manager.save('countries', data['id'], data)
         return make_response(jsonify(data), 201)
 
 @app.route('/countries/<country_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def manage_country(country_id):
+    """Endpoint to manage a specific country"""
     country = data_manager.get('countries', country_id)
     if not country:
         return make_response(jsonify({'error': 'Country not found'}), 404)
 
     if request.method == 'GET':
-        # Get a country by ID
+        # Get a specific country
         return jsonify(country)
 
     if request.method == 'PUT':
-        # Update a country by ID
+        # Update a country
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -83,15 +87,16 @@ def manage_country(country_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
-        # Delete a country by ID
+        # Delete a country
         data_manager.delete('countries', country_id)
         return make_response('', 204)
 
 # City endpoints
 @app.route('/cities', methods=['GET', 'POST'], strict_slashes=False)
 def manage_cities():
+    """Endpoint to manage cities"""
     if request.method == 'GET':
-        # List all cities
+        # Get all cities
         return jsonify(data_manager.get_all('cities'))
 
     if request.method == 'POST':
@@ -100,21 +105,22 @@ def manage_cities():
         if not data or 'name' not in data or 'country_code' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
         data['id'] = str(uuid.uuid4())
-        data_manager.save('cities', data)
+        data_manager.save('cities', data['id'], data)
         return make_response(jsonify(data), 201)
 
 @app.route('/cities/<city_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def manage_city(city_id):
+    """Endpoint to manage a specific city"""
     city = data_manager.get('cities', city_id)
     if not city:
         return make_response(jsonify({'error': 'City not found'}), 404)
 
     if request.method == 'GET':
-        # Get a city by ID
+        # Get a specific city
         return jsonify(city)
 
     if request.method == 'PUT':
-        # Update a city by ID
+        # Update a city
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -123,15 +129,16 @@ def manage_city(city_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
-        # Delete a city by ID
+        # Delete a city
         data_manager.delete('cities', city_id)
         return make_response('', 204)
 
 # Amenity endpoints
 @app.route('/amenities', methods=['GET', 'POST'], strict_slashes=False)
 def manage_amenities():
+    """Endpoint to manage amenities"""
     if request.method == 'GET':
-        # List all amenities
+        # Get all amenities
         return jsonify(data_manager.get_all('amenities'))
 
     if request.method == 'POST':
@@ -140,21 +147,22 @@ def manage_amenities():
         if not data or 'name' not in data:
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
         data['id'] = str(uuid.uuid4())
-        data_manager.save('amenities', data)
+        data_manager.save('amenities', data['id'], data)
         return make_response(jsonify(data), 201)
 
 @app.route('/amenities/<amenity_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def manage_amenity(amenity_id):
+    """Endpoint to manage a specific amenity"""
     amenity = data_manager.get('amenities', amenity_id)
     if not amenity:
         return make_response(jsonify({'error': 'Amenity not found'}), 404)
 
     if request.method == 'GET':
-        # Get an amenity by ID
+        # Get a specific amenity
         return jsonify(amenity)
 
     if request.method == 'PUT':
-        # Update an amenity by ID
+        # Update an amenity
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -164,15 +172,16 @@ def manage_amenity(amenity_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
-        # Delete an amenity by ID
+        # Delete an amenity
         data_manager.delete('amenities', amenity_id)
         return make_response('', 204)
 
 # Place endpoints
 @app.route('/places', methods=['GET', 'POST'], strict_slashes=False)
 def manage_places():
+    """Endpoint to manage places"""
     if request.method == 'GET':
-        # List all places
+        # Get all places
         return jsonify(data_manager.get_all('places'))
 
     if request.method == 'POST':
@@ -182,21 +191,22 @@ def manage_places():
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
         data['id'] = str(uuid.uuid4())
         data['created_at'] = data['updated_at'] = datetime.now().isoformat()
-        data_manager.save('places', data)
+        data_manager.save('places', data['id'], data)
         return make_response(jsonify(data), 201)
 
 @app.route('/places/<place_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def manage_place(place_id):
+    """Endpoint to manage a specific place"""
     place = data_manager.get('places', place_id)
     if not place:
         return make_response(jsonify({'error': 'Place not found'}), 404)
 
     if request.method == 'GET':
-        # Get a place by ID
+        # Get a specific place
         return jsonify(place)
 
     if request.method == 'PUT':
-        # Update a place by ID
+        # Update a place
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -206,15 +216,16 @@ def manage_place(place_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
-        # Delete a place by ID
+        # Delete a place
         data_manager.delete('places', place_id)
         return make_response('', 204)
 
 # Review endpoints
 @app.route('/reviews', methods=['GET', 'POST'], strict_slashes=False)
 def manage_reviews():
+    """Endpoint to manage reviews"""
     if request.method == 'GET':
-        # List all reviews
+        # Get all reviews
         return jsonify(data_manager.get_all('reviews'))
 
     if request.method == 'POST':
@@ -224,21 +235,22 @@ def manage_reviews():
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
         data['id'] = str(uuid.uuid4())
         data['created_at'] = data['updated_at'] = datetime.now().isoformat()
-        data_manager.save('reviews', data)
+        data_manager.save('reviews', data['id'], data)
         return make_response(jsonify(data), 201)
 
 @app.route('/reviews/<review_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def manage_review(review_id):
+    """Endpoint to manage a specific review"""
     review = data_manager.get('reviews', review_id)
     if not review:
         return make_response(jsonify({'error': 'Review not found'}), 404)
 
     if request.method == 'GET':
-        # Get a review by ID
+        # Get a specific review
         return jsonify(review)
 
     if request.method == 'PUT':
-        # Update a review by ID
+        # Update a review
         data = request.get_json()
         if not data:
             return make_response(jsonify({'error': 'No data provided'}), 400)
@@ -248,7 +260,7 @@ def manage_review(review_id):
         return jsonify(data)
 
     if request.method == 'DELETE':
-        # Delete a review by ID
+        # Delete a review
         data_manager.delete('reviews', review_id)
         return make_response('', 204)
 

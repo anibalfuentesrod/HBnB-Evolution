@@ -1,44 +1,58 @@
 import unittest
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+import json
+import uuid
 from data_manager import DataManager
-from models.user import User
 
 class TestDataManager(unittest.TestCase):
-    def setUp(self):
-        self.test_storage_file = 'test_storage.json'
-        self.data_manager = DataManager(storage_file=self.test_storage_file)
-        User.clear_existing_emails()
 
-    def tearDown(self):
-        if os.path.exists(self.test_storage_file):
-            os.remove(self.test_storage_file)
+    def setUp(self):
+        self.data_manager = DataManager('data/storage.json')
 
     def test_save_and_get_user(self):
-        user = User(email="anibal@gmail.com", password="anibal321")
-        self.data_manager.save(user)
-        retrieved_user = self.data_manager.get(user.id, 'User')
-        self.assertIsNotNone(retrieved_user)
-        self.assertEqual(retrieved_user['email'], "anibal@gmail.com")
+        user_id = str(uuid.uuid4())
+        user_data = {
+            "id": user_id,
+            "email": "testuser@example.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "created_at": "2024-06-14T00:00:00",
+            "updated_at": "2024-06-14T00:00:00"
+        }
+        self.data_manager.save('users', user_id, user_data)
+        user = self.data_manager.get('users', user_id)
+        self.assertEqual(user['email'], "testuser@example.com")
 
     def test_update_user(self):
-        user = User(email="anibal@gmail.com", password="anibal321")
-        self.data_manager.save(user)
-        user.password = "anibalnew"
-        self.data_manager.update(user)
-        retrieved_user = self.data_manager.get(user.id, 'User')
-        self.assertIsNotNone(retrieved_user)
-        self.assertEqual(retrieved_user['password'], "anibalnew")
+        user_id = str(uuid.uuid4())
+        user_data = {
+            "id": user_id,
+            "email": "testuser@example.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "created_at": "2024-06-14T00:00:00",
+            "updated_at": "2024-06-14T00:00:00"
+        }
+        self.data_manager.save('users', user_id, user_data)
+        updated_user_data = user_data.copy()
+        updated_user_data['email'] = "newemail@example.com"
+        self.data_manager.update('users', user_id, updated_user_data)
+        user = self.data_manager.get('users', user_id)
+        self.assertEqual(user['email'], "newemail@example.com")
 
     def test_delete_user(self):
-        user = User(email="test@example.com", password="password")
-        self.data_manager.save(user)
-        self.data_manager.delete(user.id, 'User')
-        retrieved_user = self.data_manager.get(user.id, 'User')
-        self.assertIsNone(retrieved_user)
+        user_id = str(uuid.uuid4())
+        user_data = {
+            "id": user_id,
+            "email": "testuser@example.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "created_at": "2024-06-14T00:00:00",
+            "updated_at": "2024-06-14T00:00:00"
+        }
+        self.data_manager.save('users', user_id, user_data)
+        self.data_manager.delete('users', user_id)
+        user = self.data_manager.get('users', user_id)
+        self.assertIsNone(user)
 
 if __name__ == '__main__':
     unittest.main()

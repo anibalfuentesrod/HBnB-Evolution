@@ -1,8 +1,63 @@
 {
-    "users": {},
-    "countries": {},
-    "cities": {},
-    "amenities": {},
-    "places": {},
-    "reviews": {}
+    "users": {
+        "af3a968e-e255-4f72-9f6e-2bd66c095b4e": {
+            "email": "user@example.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "id": "af3a968e-e255-4f72-9f6e-2bd66c095b4e",
+            "created_at": "2024-06-23T14:40:01.050304",
+            "updated_at": "2024-06-23T14:40:01.050304"
+        }
+    },
+    "countries": {
+        "66f30547-f46a-4d7c-8bb7-99a41cba16e3": {
+            "name": "United States",
+            "code": "US",
+            "id": "66f30547-f46a-4d7c-8bb7-99a41cba16e3"
+        }
+    },
+    "cities": {
+        "e341247e-e19c-4d84-bd58-402290d69ebc": {
+            "name": "Los Angeles",
+            "country_code": "US",
+            "id": "e341247e-e19c-4d84-bd58-402290d69ebc"
+        }
+    },
+    "amenities": {
+        "345bcd18-b031-4448-bfb8-2f6d0527c453": {
+            "name": "High-Speed Wi-Fi",
+            "id": "345bcd18-b031-4448-bfb8-2f6d0527c453",
+            "updated_at": "2024-06-23T14:38:43.311806"
+        }
+    },
+    "places": {
+        "dd14e539-d5f9-443b-8acb-32c3406273bf": {
+            "name": "Updated Park",
+            "description": "An updated description.",
+            "address": "Updated Address, NY",
+            "city_id": "e341247e-e19c-4d84-bd58-402290d69ebc",
+            "latitude": 40.785091,
+            "longitude": -73.968285,
+            "host_id": "af3a968e-e255-4f72-9f6e-2bd66c095b4e",
+            "number_of_rooms": 0,
+            "number_of_bathrooms": 0,
+            "price_per_night": 0,
+            "max_guests": 100,
+            "amenity_ids": [
+                "345bcd18-b031-4448-bfb8-2f6d0527c453"
+            ],
+            "id": "dd14e539-d5f9-443b-8acb-32c3406273bf",
+            "updated_at": "2024-06-23T14:47:19.192811"
+        }
+    },
+    "reviews": {
+        "b6d5593e-5466-4ba5-9f67-a168c5d916bf": {
+            "place_id": "dd14e539-d5f9-443b-8acb-32c3406273bf",
+            "user_id": "af3a968e-e255-4f72-9f6e-2bd66c095b4e",
+            "rating": 4,
+            "comment": "Good place!",
+            "id": "b6d5593e-5466-4ba5-9f67-a168c5d916bf",
+            "updated_at": "2024-06-23T15:00:13.721523"
+        }
+    }
 }
